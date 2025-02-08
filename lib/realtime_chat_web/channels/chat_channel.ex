@@ -2,6 +2,7 @@ defmodule RealtimeChatWeb.ChatChannel do
   use RealtimeChatWeb, :channel
 
   alias RealtimeChat.MessageStore
+  alias Logger
 
   @impl true
   def join("chat:lobby", _payload, socket) do
@@ -48,5 +49,19 @@ defmodule RealtimeChatWeb.ChatChannel do
     updated_message = MessageStore.add_like(message_id)
     broadcast!(socket, "message_liked", %{message: updated_message})
     {:reply, :ok, socket}
+  end
+
+  @impl true
+  def handle_in("crash_test", _params, socket) do
+    # 意図的にクラッシュを発生させ、Supervisorの動作を確認
+    Logger.info("クラッシュテストを実行します...")
+    raise "意図的なクラッシュテスト"
+    {:noreply, socket}
+  end
+
+  # クラッシュ後も既存の機能は通常通り動作することを確認するためのテスト用メッセージ
+  @impl true
+  def handle_in("ping", _params, socket) do
+    {:reply, {:ok, %{message: "pong"}}, socket}
   end
 end

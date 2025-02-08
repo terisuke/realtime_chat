@@ -1,5 +1,5 @@
-import "phoenix_html"
 import { Socket } from "phoenix"
+import "phoenix_html"
 import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
@@ -187,3 +187,24 @@ function updateMessageLikes(messageId, likes) {
     }
   }
 }
+
+// クラッシュテスト用のボタンを追加
+const crashTestBtn = document.createElement("button")
+crashTestBtn.textContent = "クラッシュテスト実行"
+crashTestBtn.className = "bg-red-500 text-white px-4 py-2 rounded"
+crashTestBtn.onclick = () => {
+  console.log("クラッシュテストを実行...")
+  channel.push("crash_test")
+    .receive("error", () => {
+      console.log("チャンネルがクラッシュしました")
+      
+      // クラッシュ後にチャンネルが復帰したことを確認
+      setTimeout(() => {
+        channel.push("ping")
+          .receive("ok", response => {
+            console.log("チャンネルが復帰しました:", response)
+          })
+      }, 1000)
+    })
+}
+document.querySelector("#chat-form").appendChild(crashTestBtn)

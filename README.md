@@ -7,20 +7,20 @@ Phoenix の Channels 機能を用いて、WebSocket でクライアント間の�
 
 ## 主な機能
 
-1.  **リアルタイムチャット**
-    *   WebSocket を通してメッセージを送受信し、ページをリロードすることなく更新が反映されます。
-2.  **リプライ機能**
-    *   あるメッセージに対して返信（引用リプライ）を行うと、返信元メッセージの内容を表示します。
-3.  **いいね (Like) 機能**
-    *   各メッセージに対して「いいね」を押せます。即座に全クライアントの表示が更新されます。
-4.  **Phoenix Channels × GenServer = 高並行 & 耐障害性**
-    *   OTP（Erlang/Elixir の標準並行フレームワーク）により、大量の接続やクラッシュ耐性を簡潔に扱うことができます。
+1. **リアルタイムチャット**
+    * WebSocket を通してメッセージを送受信し、ページをリロードすることなく更新が反映されます。
+2. **リプライ機能**
+    * あるメッセージに対して返信（引用リプライ）を行うと、返信元メッセージの内容を表示します。
+3. **いいね (Like) 機能**
+    * 各メッセージに対して「いいね」を押せます。即座に全クライアントの表示が更新されます。
+4. **Phoenix Channels × GenServer = 高並行 & 耐障害性**
+    * OTP（Erlang/Elixir の標準並行フレームワーク）により、大量の接続やクラッシュ耐性を簡潔に扱うことができます。
 
 ## 動作環境
 
-*   Elixir ~> 1.14 (1.14.0 以上推奨)
-*   Phoenix ~> 1.7
-*   Node.js (Tailwind / esbuild などのアセットビルド用)
+* Elixir ~> 1.14 (1.14.0 以上推奨)
+* Phoenix ~> 1.7
+* Node.js (Tailwind / esbuild などのアセットビルド用)
 
 ## セットアップ & 起動方法
 
@@ -161,9 +161,9 @@ defmodule RealtimeChat.MessageStore do
 end
 ```
 
-*   メモリ上でメッセージをリスト管理しており、DB は使っていません。
-*   `add_message/2` / `get_messages/0` / `add_like/1` を通じて、メッセージの投稿やいいねが行われます。
-*   Supervisor により 自動再起動が行われるため、クラッシュ時にもアプリ全体が落ちることはありません。
+* メモリ上でメッセージをリスト管理しており、DB は使っていません。
+* `add_message/2` / `get_messages/0` / `add_like/1` を通じて、メッセージの投稿やいいねが行われます。
+* Supervisor により 自動再起動が行われるため、クラッシュ時にもアプリ全体が落ちることはありません。
 
 ### 2. OTPアプリケーション & Supervisor: application.ex
 
@@ -189,7 +189,7 @@ defmodule RealtimeChat.Application do
 end
 ```
 
-*   `MessageStore` が Supervisor の `children` に登録され、OTP フレームワークによりプロセス管理されます。
+* `MessageStore` が Supervisor の `children` に登録され、OTP フレームワークによりプロセス管理されます。
 
 ### 3. Channel 実装: ChatChannel
 
@@ -254,8 +254,8 @@ defmodule RealtimeChatWeb.ChatChannel do
 end
 ```
 
-*   クライアントは `"chat:lobby"` チャンネルに join すると、まず `handle_info(:after_join, ...)` により既存メッセージが送られます。
-*   `"new_message"` や `"like_message"` といったイベントを受信すると、`MessageStore` に書き込み、`broadcast!` で全クライアントに通知。
+* クライアントは `"chat:lobby"` チャンネルに join すると、まず `handle_info(:after_join, ...)` により既存メッセージが送られます。
+* `"new_message"` や `"like_message"` といったイベントを受信すると、`MessageStore` に書き込み、`broadcast!` で全クライアントに通知。
 
 ### 4. Socket (UserSocket) 設定
 
@@ -276,8 +276,8 @@ defmodule RealtimeChatWeb.UserSocket do
 end
 ```
 
-*   `"/socket"` への接続が来たら、`UserSocket` を通して `"chat:lobby"` チャンネルにマッピングされます。
-*   認証を追加したい場合は、`connect` 内で JWT チェックなどを行うことも可能です。
+* `"/socket"` への接続が来たら、`UserSocket` を通して `"chat:lobby"` チャンネルにマッピングされます。
+* 認証を追加したい場合は、`connect` 内で JWT チェックなどを行うことも可能です。
 
 ### 5. フロントエンド: app.js
 
@@ -435,8 +435,8 @@ function escapeHtml(unsafe) {
 }
 ```
 
-*   `channel.push("new_message", {...})` で新規メッセージを送信すると、サーバの `handle_in("new_message", ...)` が処理します。
-*   返信ボタン・いいねボタンの押下時も、対応するイベント (`like_message`) がサーバに送信され、その結果は全クライアントに通知されます。
+* `channel.push("new_message", {...})` で新規メッセージを送信すると、サーバの `handle_in("new_message", ...)` が処理します。
+* 返信ボタン・いいねボタンの押下時も、対応するイベント (`like_message`) がサーバに送信され、その結果は全クライアントに通知されます。
 
 ### 6. テンプレート (HTML)
 
@@ -491,32 +491,32 @@ function escapeHtml(unsafe) {
 </div>
 ```
 
-*   Bootstrap や Tailwind などのCSSフレームワークと合わせれば、少ないコード量でUIを整えられるのが魅力です。
+* Bootstrap や Tailwind などのCSSフレームワークと合わせれば、少ないコード量でUIを整えられるのが魅力です。
 
 ## Elixir/Phoenix ならではのポイント
 
-*   **GenServer × Supervisor**
-    *   耐障害性の高いサーバを少ないコードで実装。
-    *   クラッシュしてもすぐに再起動し、サービスを継続できます。
-*   **パターンマッチ & イミュータブルデータ**
-    *   コードが読みやすく、並行処理での競合も起きにくい。
-*   **Channels を使ったリアルタイム通信**
-    *   Phoenix が標準で WebSocket による PubSub 機能を提供。
-    *   大量接続やスケーリングに強い設計が可能。
-*   **OTP による分散・拡張**
-    *   DNSCluster などを使えば、複数ノードで分散してチャットを運用することも容易です。
+* **GenServer × Supervisor**
+  * 耐障害性の高いサーバを少ないコードで実装。
+  * クラッシュしてもすぐに再起動し、サービスを継続できます。
+* **パターンマッチ & イミュータブルデータ**
+  * コードが読みやすく、並行処理での競合も起きにくい。
+* **Channels を使ったリアルタイム通信**
+  * Phoenix が標準で WebSocket による PubSub 機能を提供。
+  * 大量接続やスケーリングに強い設計が可能。
+* **OTP による分散・拡張**
+  * DNSCluster などを使えば、複数ノードで分散してチャットを運用することも容易です。
 
 ## 今後の拡張案
 
-1.  **データベース永続化**
-    *   メッセージを DB (Postgres など) に保存すれば、サーバが再起動しても履歴が残ります。
-    *   Phoenix + Ecto で統合するか、Supabase のような外部サービスを利用するなどが簡単です。
-2.  **ユーザー認証 & ログイン機能**
-    *   `connect/3` や `handle_in/3` で JWT をチェックし、ユーザー毎の表示名やプロフィール画像を扱うこともできます。
-3.  **Presence (オンラインユーザー一覧) の導入**
-    *   Phoenix には Presence が標準搭載されており、チャット参加者の状態をリアルタイムに管理できます。
-4.  **GUI・UI強化**
-    *   今回はTailwindでシンプルに構築していますが、React/Vue/Svelteなど好きなフロントエンドフレームワークと組み合わせも可能です。
+1. **データベース永続化**
+    * メッセージを DB (Postgres など) に保存すれば、サーバが再起動しても履歴が残ります。
+    * Phoenix + Ecto で統合するか、Supabase のような外部サービスを利用するなどが簡単です。
+2. **ユーザー認証 & ログイン機能**
+    * `connect/3` や `handle_in/3` で JWT をチェックし、ユーザー毎の表示名やプロフィール画像を扱うこともできます。
+3. **Presence (オンラインユーザー一覧) の導入**
+    * Phoenix には Presence が標準搭載されており、チャット参加者の状態をリアルタイムに管理できます。
+4. **GUI・UI強化**
+    * 今回はTailwindでシンプルに構築していますが、React/Vue/Svelteなど好きなフロントエンドフレームワークと組み合わせも可能です。
 
 ## ライセンス
 
