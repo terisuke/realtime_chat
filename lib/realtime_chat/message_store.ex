@@ -1,4 +1,3 @@
-# lib/realtime_chat/message_store.ex
 defmodule RealtimeChat.MessageStore do
   use GenServer
 
@@ -6,8 +5,6 @@ defmodule RealtimeChat.MessageStore do
   シンプルなメモリ内メッセージストア。
   アプリ起動中のみメッセージを保持する。
   """
-
-  # --- 公開API ---
 
   def start_link(_opts) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
@@ -27,8 +24,6 @@ defmodule RealtimeChat.MessageStore do
     GenServer.call(__MODULE__, {:add_like, message_id})
   end
 
-  # --- GenServer実装 ---
-
   @impl true
   def init(_init_arg) do
     {:ok, %{messages: [], next_id: 1}}
@@ -40,7 +35,6 @@ defmodule RealtimeChat.MessageStore do
         _from,
         %{messages: messages, next_id: id} = state
       ) do
-    # 返信先のメッセージを探す
     reply_to_message =
       if reply_to_id do
         Enum.find(messages, fn msg -> msg.id == reply_to_id end)

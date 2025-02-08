@@ -19,12 +19,10 @@ defmodule RealtimeChatWeb.ConnCase do
 
   using do
     quote do
-      # The default endpoint for testing
       @endpoint RealtimeChatWeb.Endpoint
 
       use RealtimeChatWeb, :verified_routes
 
-      # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
       import RealtimeChatWeb.ConnCase
