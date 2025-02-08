@@ -15,6 +15,8 @@ defmodule RealtimeChat.Application do
       {Finch, name: RealtimeChat.Finch},
       # Start a worker by calling: RealtimeChat.Worker.start_link(arg)
       # {RealtimeChat.Worker, arg},
+      # --- ここを追加: メッセージストアを起動 ---
+      {RealtimeChat.MessageStore, []},
       # Start to serve requests, typically the last entry
       RealtimeChatWeb.Endpoint
     ]

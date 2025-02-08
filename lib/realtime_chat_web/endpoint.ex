@@ -11,6 +11,12 @@ defmodule RealtimeChatWeb.Endpoint do
     same_site: "Lax"
   ]
 
+  # --- ここから WebSocket Route を追加 ---
+  socket "/socket", RealtimeChatWeb.UserSocket,
+    websocket: [connect_info: [session: @session_options]],
+    longpoll: false
+
+  # ------------------------------------
   socket "/live", Phoenix.LiveView.Socket,
     websocket: [connect_info: [session: @session_options]],
     longpoll: [connect_info: [session: @session_options]]

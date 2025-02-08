@@ -42,3 +42,65 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
+//------------------------------------------------------
+// リアルタイムチャット用のソケット処理
+//------------------------------------------------------
+
+// Phoenixソケットへの接続
+let socket = new Socket("/socket", {params: {}})
+socket.connect()
+
+// "chat:lobby"チャンネルに参加
+let channel = socket.channel("chat:lobby", {})
+
+// 過去メッセージを一括受信
+channel.on("load_messages", payload => {
+  let messages = payload.messages
+  console.log("Loaded messages:", messages)
+  appendMessages(messages)
+})
+
+// 新規メッセージを受信
+channel.on("new_message", payload => {
+  let { message } = payload
+  console.log("Received new_message:", message)
+  appendMessage(message)
+})
+
+// チャンネル参加時のハンドラ
+channel.join()
+  .receive("ok", resp => { console.log("Joined chat:lobby successfully", resp) })
+  .receive("error", resp => { console.log("Unable to join", resp) })
+
+// DOM要素を取得
+let sendBtn = document.getElementById("send-btn")
+let messageInput = document.getElementById("message-input")
+let messagesUL = document.getElementById("messages")
+
+if (sendBtn && messageInput && messagesUL) {
+  // 送信ボタンを押した時のイベント
+  sendBtn.addEventListener("click", () => {
+    let content = messageInput.value.trim()
+    if (content !== "") {
+      // チャンネルへ送信
+      channel.push("new_message", { content: content })
+      messageInput.value = ""
+      messageInput.focus()
+    }
+  })
+}
+
+// メッセージ一覧を追加表示する
+function appendMessages(msgList) {
+  msgList.forEach(msg => {
+    appendMessage(msg)
+  })
+}
+
+// 1つのメッセージを表示
+function appendMessage(msg) {
+  if (!messagesUL) return
+  let li = document.createElement("li")
+  li.innerText = `[${msg.id}] ${msg.content}`
+  messagesUL.appendChild(li)
+}

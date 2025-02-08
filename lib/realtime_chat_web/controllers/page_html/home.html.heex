@@ -220,3 +220,24 @@
     </div>
   </div>
 </div>
+<!-- ここから下を追加: シンプルなリアルタイムチャットUI -->
+<hr class="my-8" />
+
+<section class="mx-auto max-w-xl p-4 border border-gray-200 rounded-lg">
+  <h2 class="text-lg font-bold mb-4">Realtime Chat</h2>
+  <ul id="messages" class="mb-4 border p-2 min-h-[6rem] list-disc list-inside"></ul>
+  <div class="flex gap-2">
+    <input
+      id="message-input"
+      type="text"
+      placeholder="Type a message..."
+      class="border flex-1 rounded px-2 py-1"
+    />
+    <button
+      id="send-btn"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded"
+    >
+      Send
+    </button>
+  </div>
+</section>
