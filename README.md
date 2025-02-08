@@ -26,7 +26,7 @@ Phoenix の Channels 機能を用いて、WebSocket でクライアント間の�
 
 ```bash
 # 1. リポジトリをクローン
-git clone https://github.com/your-account/realtime_chat.git
+git clone https://github.com/terisuke/realtime_chat.git
 cd realtime_chat
 
 # 2. 依存関係をインストール
